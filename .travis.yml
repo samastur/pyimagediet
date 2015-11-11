@@ -4,6 +4,7 @@ python:
   - "3.5"
   - "pypy"
 # command to install dependencies
-#install: "pip install -r requirements.txt"
+install: 
+  - pip install tox
 # command to run tests
 script: tox
