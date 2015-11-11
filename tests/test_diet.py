@@ -1,5 +1,5 @@
 from os.path import abspath, dirname, join
-import src.diet as diet
+import pyimagediet.diet as diet
 
 TEST_DIR = abspath(dirname(__file__))
 

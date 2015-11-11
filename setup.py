@@ -24,11 +24,11 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Framework :: Django',
         'Topic :: Utilities',
     ],
     install_requires=[
         'PyYAML>=3.11',
+        'python-magic>=0.4.10',
     ],
     include_package_data=True,
     packages=find_packages(),
