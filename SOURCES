@@ -1,0 +1,9 @@
+Sources of external files and their licenses
+
+nature.svg, nature.png and nature.gif (found in tests/test_files)
+Came from: https://openclipart.org/detail/221709/nature-primeval
+License: Public Domain
+
+vienna.jpg (found in tests/test_files)
+Came from Marko Samastur, author of this package.
+License: CC Attribution-NonCommercial
