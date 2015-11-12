@@ -1,6 +1,13 @@
 import copy
+import filecmp
 import magic
+from os.path import exists
+import shutil
 import yaml
+
+
+class DietException(Exception):
+    pass
 
 
 def read_yaml_configuration(filename):
@@ -46,3 +53,27 @@ def parse_configuration(config):
         new_config['pipelines'][label] = " && ".join(commands)
 
     return new_config
+
+
+def backup_file(filename, backup_ext):
+    '''
+    Make a file backup if:
+    - backup extension is defined
+    - backup file does not exist yet
+    If backup file exists:
+    - do nothing if it is same
+    - complain loudly otherwise
+
+    Return file name of the back up if successful. None otherwise.
+    '''
+    ext = backup_ext.strip(" .")
+    if ext:
+        backup_filename = ".".join([filename, ext])
+        if not exists(backup_filename):
+            shutil.copyfile(filename, backup_filename)
+        else:
+            if not filecmp.cmp(filename, backup_filename):
+                raise DietException('Cannot make backup because a different'
+                                    'file with that name already exists.')
+        return backup_filename
+    return None
