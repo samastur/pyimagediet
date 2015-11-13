@@ -37,6 +37,6 @@ setup(
         'python-magic>=0.4.10',
     ],
     include_package_data=True,
-    packages=find_packages(),
+    packages=['pyimagediet'],
     zip_safe=False
 )
