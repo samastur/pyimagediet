@@ -16,6 +16,11 @@ matrix:
 
 # command to install dependencies
 install: 
+  - pip install coveralls
   - pip install tox
 # command to run tests
-script: tox
+script: 
+  tox
+  coverage run --source=pyimagediet -m py.test
+after_success:
+  coveralls
