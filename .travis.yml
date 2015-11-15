@@ -16,6 +16,7 @@ matrix:
 
 # command to install dependencies
 install: 
+  - sudo apt-get install optipng
   - pip install coveralls
   - pip install tox
 # command to run tests

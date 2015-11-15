@@ -1,4 +1,5 @@
 import copy
+import filecmp
 import os
 from os.path import abspath, dirname, join, exists
 import pytest
@@ -155,3 +156,123 @@ def test_backup_file_raises_exception_if_different_backup_exists():
 		pass
 
 	os.remove(backup_filename)
+
+
+#
+# copy_if_different
+#
+def test_copy_if_different_does_nothing_if_files_are_same():
+    filename = join(TEST_FILES_DIR, 'config.yaml')
+    copy_filename = ".".join([filename, 'back'])
+    shutil.copyfile(filename, copy_filename)
+
+    statinfo = os.stat(copy_filename)
+    diet.copy_if_different(filename, copy_filename)
+    assert os.stat(copy_filename) == statinfo
+
+    os.remove(copy_filename)
+
+
+def test_copy_if_different_copies_file_if_destination_is_different():
+    filename = join(TEST_FILES_DIR, 'config.yaml')
+    copy_filename = ".".join([filename, 'back'])
+    with open(copy_filename, 'w') as f:
+        f.write('almost empty')
+
+    statinfo = os.stat(copy_filename)
+    diet.copy_if_different(filename, copy_filename)
+    assert os.stat(copy_filename) != statinfo
+
+    os.remove(copy_filename)
+
+
+#
+# squeeze
+#
+def test_squeeze_restores_file_if_it_fails():
+    orig_filename = join(TEST_FILES_DIR, 'nature.gif')
+    backup = diet.backup_file(orig_filename, 'test')
+    filename = ".".join([orig_filename, "test"])
+    backup = diet.backup_file(filename, 'back')
+    stat = os.stat(filename)
+
+    # Screw up file
+    with open(filename, 'w') as f:
+        f.write(" ")
+
+    assert not filecmp.cmp(filename, backup)
+
+    # This will fail because of missing command AND broken image
+    size = diet.squeeze('no_command', filename, backup)
+
+    assert size == stat.st_size
+    assert filecmp.cmp(filename, backup)
+
+    os.remove(backup)
+    os.remove(filename)
+
+
+def test_squeeze_shrinks_an_image():
+    filename = join(TEST_FILES_DIR, 'nature.png')
+    backup = diet.backup_file(filename, 'back')
+    stat = os.stat(filename)
+    cmd = "optipng -force -o7 '{file}' "
+
+    assert filecmp.cmp(filename, backup)
+
+    size = diet.squeeze(cmd, filename, "")
+    assert not filecmp.cmp(filename, backup)
+
+    shutil.copyfile(backup, filename)
+    os.remove(backup)
+
+
+#
+# diet
+#
+def test_diet_complains_if_passed_filename_is_not_file():
+    filename = TEST_FILES_DIR
+
+    try:
+        diet.diet(filename, {})
+    except (diet.NotFileDietException,) as e:
+        pass
+
+
+def test_diet_creates_a_backup_file_if_backup_is_enabled(config_copy):
+    filename = join(TEST_FILES_DIR, 'nature.png')
+    backup_filename = ".".join([filename, 'back'])
+    config_copy['backup'] = 'back'
+
+    diet.diet(filename, config_copy)
+
+    assert exists(backup_filename)
+    os.remove(backup_filename)
+
+
+def test_diet_removes_all_backup_files_if_backup_is_disabled(config_copy):
+    filename = join(TEST_FILES_DIR, 'nature.png')
+    backup_filename = ".".join([filename, 'back'])
+    internal_filename = ".".join([filename, 'diet_internal'])
+
+    diet.diet(filename, config_copy)
+
+    assert not exists(backup_filename)
+    assert not exists(internal_filename)
+
+
+def test_diet_deletes_internal_backup_when_backup_is_disabled(config_copy):
+    filename = join(TEST_FILES_DIR, 'config.yaml')
+    backup_filename = ".".join([filename, 'diet_internal'])
+
+    diet.diet(filename, config_copy)
+    assert not exists(backup_filename)
+
+
+def test_diet_doesnt_change_files_without_pipeline(config_copy):
+    filename = join(TEST_FILES_DIR, 'config.yaml')
+
+    statinfo = os.stat(filename)
+
+    diet.diet(filename, config_copy)
+    assert os.stat(filename) == statinfo

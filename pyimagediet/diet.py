@@ -1,13 +1,19 @@
 import copy
 import filecmp
 import magic
-from os.path import exists
+import os
+from os.path import exists, isfile
 import shutil
+from subprocess import call, PIPE
 import yaml
 
 
 class DietException(Exception):
     pass
+
+
+class NotFileDietException(DietException): pass
+class CompressFileDietException(DietException): pass
 
 
 def read_yaml_configuration(filename):
@@ -77,3 +83,60 @@ def backup_file(filename, backup_ext):
                                     'file with that name already exists.')
         return backup_filename
     return None
+
+
+def copy_if_different(src, dst):
+	if not filecmp.cmp(src, dst):
+		shutil.copyfile(src, dst)
+
+
+def squeeze(cmd, filename, backup_filename):
+    # Some tools save result in a separate file so this is used as an
+    # intermediate result.
+    tmpfile = ".".join([filename, "diet_tmp"])
+
+    try:
+        retcode = call(cmd.format(file=filename, output_file=tmpfile),
+                       shell=True, stdout=PIPE)
+        if retcode != 0:
+            # Failed; Likely missing some utilities
+            raise CompressFileDietException(
+                ("Squeezing failed. Likely because "
+                 "of missing required utilities."))
+    except (CompressFileDietException,) as e:
+        copy_if_different(backup_filename, filename)
+
+    return os.stat(filename).st_size
+
+
+def diet(filename, configuration):
+    '''
+    Squeeze files if there is a pipeline defined for them or leave them be
+    otherwise.
+
+    Makes a backup of a file, but only if file will be processed.
+
+    Return new size of the file in bytes.
+    '''
+    if not isfile(filename):
+        raise NotFileDietException('Passed filename does not point to a file')
+    conf = parse_configuration(configuration)
+
+    filetype = determinetype(filename)
+    squeeze_cmd = conf['pipelines'].get(filetype)
+    if squeeze_cmd:
+        tmpbackup_ext = 'diet_internal'
+        ext = conf.get('backup', tmpbackup_ext)
+        backup = backup_file(filename, ext)
+
+        size = os.stat(filename).st_size
+        new_size = squeeze(squeeze_cmd, filename, backup)
+
+        if not conf.get('keep_processed', False) and new_size >= size:
+            copy_if_different(backup, filename)
+
+        # Delete backup, if it was internal
+        if not conf.get('backup'):
+            os.remove(backup)
+
+    return os.stat(filename).st_size
