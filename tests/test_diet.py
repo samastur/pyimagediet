@@ -28,6 +28,7 @@ TEST_CONFIG = {
 		'gif': ['gifsicle'],
 		'jpeg': ['jpegtran'],
 		'png': ['optipng', 'advpng', 'pngcrush']}}
+BALLOON_CMD = join(TEST_DIR, 'balloon.py')
 
 
 @pytest.fixture
@@ -230,6 +231,12 @@ def test_squeeze_shrinks_an_image():
 #
 # diet
 #
+def add_fake_pipeline_to_config(cmd, conf):
+    conf['commands']['balloon'] = cmd
+    conf['parameters']['balloon'] = '{file} "more bytes"'
+    conf['pipelines']['text'] = ['balloon']
+
+
 def test_diet_complains_if_passed_filename_is_not_file():
     filename = TEST_FILES_DIR
 
@@ -276,3 +283,32 @@ def test_diet_doesnt_change_files_without_pipeline(config_copy):
 
     diet.diet(filename, config_copy)
     assert os.stat(filename) == statinfo
+
+
+def test_diet_keeps_smaller_file_by_default(config_copy):
+    add_fake_pipeline_to_config(BALLOON_CMD, config_copy)
+    orig_filename = join(TEST_FILES_DIR, 'config.yaml')
+    diet.backup_file(orig_filename, 'test')
+    filename = ".".join([orig_filename, "test"])
+
+    old_size = os.stat(filename).st_size
+
+    diet.diet(filename, config_copy)
+    assert os.stat(filename).st_size == old_size
+
+    os.remove(filename)
+
+
+def test_diet_keeps_processed_file_if_keep_processed_is_enabled(config_copy):
+    add_fake_pipeline_to_config(BALLOON_CMD, config_copy)
+    config_copy['keep_processed'] = True
+    orig_filename = join(TEST_FILES_DIR, 'config.yaml')
+    diet.backup_file(orig_filename, 'test')
+    filename = ".".join([orig_filename, "test"])
+
+    old_size = os.stat(filename).st_size
+
+    diet.diet(filename, config_copy)
+    assert os.stat(filename).st_size > old_size
+
+    os.remove(filename)
