@@ -42,35 +42,35 @@ def test_read_yaml_configuration():
 
 
 #
-# determinetype
+# determine_type
 #
-def test_determinetype_returns_text_on_yaml():
+def test_determine_type_returns_text_on_yaml():
     f = join(TEST_FILES_DIR, 'config.yaml')
-    ftype = diet.determinetype(f)
+    ftype = diet.determine_type(f)
     assert ftype == 'text'
 
 
-def test_determinetype_returns_png_on_png_images():
+def test_determine_type_returns_png_on_png_images():
     f = join(TEST_FILES_DIR, 'nature.png')
-    ftype = diet.determinetype(f)
+    ftype = diet.determine_type(f)
     assert ftype == 'png'
 
 
-def test_determinetype_returns_gif_on_gif_images():
+def test_determine_type_returns_gif_on_gif_images():
     f = join(TEST_FILES_DIR, 'nature.gif')
-    ftype = diet.determinetype(f)
+    ftype = diet.determine_type(f)
     assert ftype == 'gif'
 
 
-def test_determinetype_returns_jpeg_on_jpeg_images():
+def test_determine_type_returns_jpeg_on_jpeg_images():
     f = join(TEST_FILES_DIR, 'vienna.jpg')
-    ftype = diet.determinetype(f)
+    ftype = diet.determine_type(f)
     assert ftype == 'jpeg'
 
 
-def test_determinetype_returns_svg_on_svg_images():
+def test_determine_type_returns_svg_on_svg_images():
     f = join(TEST_FILES_DIR, 'nature.svg')
-    ftype = diet.determinetype(f)
+    ftype = diet.determine_type(f)
     assert ftype == 'svg'
 
 

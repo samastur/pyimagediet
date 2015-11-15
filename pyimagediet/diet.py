@@ -23,7 +23,7 @@ def read_yaml_configuration(filename):
     return config
 
 
-def determinetype(filename):
+def determine_type(filename):
     '''Determine the file type and return it.'''
     ftype = magic.from_file(filename, mime=True).decode('utf8')
     if ftype == 'text/plain':
@@ -122,7 +122,7 @@ def diet(filename, configuration):
         raise NotFileDietException('Passed filename does not point to a file')
     conf = parse_configuration(configuration)
 
-    filetype = determinetype(filename)
+    filetype = determine_type(filename)
     squeeze_cmd = conf['pipelines'].get(filetype)
     if squeeze_cmd:
         tmpbackup_ext = 'diet_internal'
@@ -132,7 +132,7 @@ def diet(filename, configuration):
         size = os.stat(filename).st_size
         new_size = squeeze(squeeze_cmd, filename, backup)
 
-        if not conf.get('keep_processed', False) and new_size >= size:
+        if not conf.get('keep_processed', False) and new_size > size:
             copy_if_different(backup, filename)
 
         # Delete backup, if it was internal
