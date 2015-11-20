@@ -68,10 +68,10 @@ def check_configuration(config):
     # Check all sections are there and contain dicts
     for section in sections:
         if section not in config:
-            error_msg = 'Error: Section {} is missing.'.format(section)
+            error_msg = 'Error: Section {0} is missing.'.format(section)
             raise ConfigurationErrorDietException(error_msg)
         if not isinstance(config[section], dict):
-            error_msg = 'Error: Section {} is malformed.'.format(section)
+            error_msg = 'Error: Section {0} is malformed.'.format(section)
             raise ConfigurationErrorDietException(error_msg)
 
     # Check every command has a corresponding parameters entry
@@ -87,12 +87,12 @@ def check_configuration(config):
     for cmd in config['pipelines']:
         pipeline = config['pipelines'][cmd]
         if not isinstance(pipeline, list):
-            error_msg = ('Error: Pipeline {} is malformed. Values have to '
+            error_msg = ('Error: Pipeline {0} is malformed. Values have to '
                          'be a list of command names.').format(cmd)
             raise ConfigurationErrorDietException(error_msg)
         for tool in pipeline:
             if tool not in commands_cmds:
-                error_msg = ('Error in pipeline {}. "{}" cannot be found '
+                error_msg = ('Error in pipeline {0}. "{1}" cannot be found '
                              'among commands listed in commands '
                              'section').format(cmd, tool)
                 raise ConfigurationErrorDietException(error_msg)
