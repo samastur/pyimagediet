@@ -125,7 +125,7 @@ def test_check_configuration_fails_if_section_is_missing():
         try:
             diet.check_configuration(config)
         except (diet.ConfigurationErrorDietException,) as e:
-            error_msg = 'Error: Section {} is missing.'.format(section)
+            error_msg = 'Error: Section {0} is missing.'.format(section)
             assert e.msg == error_msg
 
 
@@ -137,7 +137,7 @@ def test_check_configuration_fails_if_sections_are_malformed():
         try:
             diet.check_configuration(config)
         except (diet.ConfigurationErrorDietException,) as e:
-            error_msg = 'Error: Section {} is malformed.'.format(section)
+            error_msg = 'Error: Section {0} is malformed.'.format(section)
             assert e.msg == error_msg
 
 def test_check_configuration_fails_if_tools_in_commands_and_parameters_differ():
