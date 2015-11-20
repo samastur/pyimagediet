@@ -9,11 +9,13 @@ import yaml
 
 
 class DietException(Exception):
-    pass
+    def __init__(self, msg='', *args):
+        self.msg = msg
 
 
 class NotFileDietException(DietException): pass
 class CompressFileDietException(DietException): pass
+class ConfigurationErrorDietException(DietException): pass
 
 
 def read_yaml_configuration(filename):
@@ -59,6 +61,42 @@ def parse_configuration(config):
         new_config['pipelines'][label] = " && ".join(commands)
 
     return new_config
+
+
+def check_configuration(config):
+    sections = ('commands', 'parameters', 'pipelines')
+    # Check all sections are there and contain dicts
+    for section in sections:
+        if section not in config:
+            error_msg = 'Error: Section {} is missing.'.format(section)
+            raise ConfigurationErrorDietException(error_msg)
+        if not isinstance(config[section], dict):
+            error_msg = 'Error: Section {} is malformed.'.format(section)
+            raise ConfigurationErrorDietException(error_msg)
+
+    # Check every command has a corresponding parameters entry
+    commands_cmds = set(list(config['commands'].keys()))
+    parameters_cmds = set(list(config['parameters'].keys()))
+    if commands_cmds != parameters_cmds:
+        error_msg = ('Every command in commands and parameters section has to '
+                     'have a corresponding entry in the other section.')
+        raise ConfigurationErrorDietException(error_msg)
+
+    # Check pipelines section contains lists as values and each of them only
+    # has entries listed in commands section
+    for cmd in config['pipelines']:
+        pipeline = config['pipelines'][cmd]
+        if not isinstance(pipeline, list):
+            error_msg = ('Error: Pipeline {} is malformed. Values have to '
+                         'be a list of command names.').format(cmd)
+            raise ConfigurationErrorDietException(error_msg)
+        for tool in pipeline:
+            if tool not in commands_cmds:
+                error_msg = ('Error in pipeline {}. "{}" cannot be found '
+                             'among commands listed in commands '
+                             'section').format(cmd, tool)
+                raise ConfigurationErrorDietException(error_msg)
+
 
 
 def backup_file(filename, backup_ext):
@@ -120,6 +158,8 @@ def diet(filename, configuration):
     '''
     if not isfile(filename):
         raise NotFileDietException('Passed filename does not point to a file')
+    # Wasteful to do parsing every time, but does not really matter as it takes
+    # practically nothing in comparison with compression
     conf = parse_configuration(configuration)
 
     filetype = determine_type(filename)

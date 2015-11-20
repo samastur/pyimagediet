@@ -111,6 +111,69 @@ def test_parse_configuration_correctly_builds_pipelines(config_copy):
 
 
 #
+# Check configuration
+#
+def test_check_configuration_passes_on_test_config(config_copy):
+    diet.check_configuration(config_copy)
+
+
+def test_check_configuration_fails_if_section_is_missing():
+    sections = ('commands', 'parameters', 'pipelines')
+    for section in sections:
+        config = config_copy()
+        del config[section]
+        try:
+            diet.check_configuration(config)
+        except (diet.ConfigurationErrorDietException,) as e:
+            error_msg = 'Error: Section {} is missing.'.format(section)
+            assert e.msg == error_msg
+
+
+def test_check_configuration_fails_if_sections_are_malformed():
+    sections = ('commands', 'parameters', 'pipelines')
+    for section in sections:
+        config = config_copy()
+        config[section] = 'not a dict'
+        try:
+            diet.check_configuration(config)
+        except (diet.ConfigurationErrorDietException,) as e:
+            error_msg = 'Error: Section {} is malformed.'.format(section)
+            assert e.msg == error_msg
+
+def test_check_configuration_fails_if_tools_in_commands_and_parameters_differ():
+    sections = ('commands', 'parameters')
+    for section in sections:
+        config = config_copy()
+        del config[section]['advpng']
+        try:
+            diet.check_configuration(config)
+        except (diet.ConfigurationErrorDietException,) as e:
+            error_msg = ('Every command in commands and parameters section has'
+                         ' to have a corresponding entry in the other section.')
+            assert e.msg == error_msg
+
+
+def test_check_configuration_fails_if_pipelines_are_malformed(config_copy):
+    pipelines = config_copy['pipelines']
+
+    pipelines['gifsicle'] = 'gifsicle'
+    try:
+        diet.check_configuration(config_copy)
+    except (diet.ConfigurationErrorDietException,) as e:
+        error_msg = ('Error: Pipeline gifsicle is malformed. Values have to '
+                     'be a list of command names.')
+        assert e.msg == error_msg
+
+    pipelines['gifsicle'] = ['gifsicled']
+    try:
+        diet.check_configuration(config_copy)
+    except (diet.ConfigurationErrorDietException,) as e:
+        error_msg = ('Error in pipeline gifsicle. "gifsicled" cannot be found '
+                     'among commands listed in commands section')
+        assert e.msg == error_msg
+
+
+#
 # backup_file
 #
 def test_backup_file_does_nothing_without_extension():
