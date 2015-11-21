@@ -5,7 +5,7 @@ from os.path import abspath, dirname, join, exists
 import pytest
 import shutil
 
-import pyimagediet.diet as diet
+import pyimagediet.process as diet
 
 TEST_DIR = abspath(dirname(__file__))
 TEST_FILES_DIR = join(TEST_DIR, 'test_files')
