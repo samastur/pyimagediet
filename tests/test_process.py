@@ -345,7 +345,8 @@ def test_diet_complains_if_passed_filename_is_not_file():
 
 
 def test_diet_creates_a_backup_file_if_backup_is_enabled(config_copy):
-    filename = join(TEST_FILES_DIR, 'nature.png')
+    add_fake_pipeline_to_config(BALLOON_CMD, config_copy)
+    filename = join(TEST_FILES_DIR, 'config.yaml')
     backup_filename = ".".join([filename, 'back'])
     config_copy['backup'] = 'back'
 
@@ -356,7 +357,8 @@ def test_diet_creates_a_backup_file_if_backup_is_enabled(config_copy):
 
 
 def test_diet_removes_all_backup_files_if_backup_is_disabled(config_copy):
-    filename = join(TEST_FILES_DIR, 'nature.png')
+    add_fake_pipeline_to_config(BALLOON_CMD, config_copy)
+    filename = join(TEST_FILES_DIR, 'config.yaml')
     backup_filename = ".".join([filename, 'back'])
     internal_filename = ".".join([filename, 'diet_internal'])
 
