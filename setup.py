@@ -1,6 +1,12 @@
+import codecs
+import os
+import re
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import sys
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+
 
 class Tox(TestCommand):
     user_options = [('tox-args=', 'a', "Arguments to pass to tox")]
@@ -22,6 +28,22 @@ class Tox(TestCommand):
         sys.exit(errno)
 
 
+
+'''Next two functions borrowed from pip's setup.py'''
+def read(*parts):
+    # intentionally *not* adding an encoding option to open
+    # see here: https://github.com/pypa/virtualenv/issues/201#issuecomment-3145690
+    return codecs.open(os.path.join(HERE, *parts), 'r').read()
+
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
+
+
 long_description = '''\
 pyimagediet is a Python wrapper around image optimisations tools used to
 reduce images size without loss of visual quality. It provides a uniform
@@ -34,7 +56,7 @@ setup(
     author="Marko Samastur",
     author_email="markos@gaivo.net",
     name='pyimagediet',
-    version='0.5',
+    version=find_version('pyimagediet', '__init__.py'),
     description='Python wrapper around image optimisations tools',
     long_description=long_description,
     url='https://github.com/samastur/pyimagediet/',
@@ -47,8 +69,10 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
