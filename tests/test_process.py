@@ -379,8 +379,9 @@ def test_diet_doesnt_change_files_without_pipeline(config_copy):
 
     statinfo = os.stat(filename)
 
-    diet.diet(filename, config_copy)
+    changed = diet.diet(filename, config_copy)
     assert os.stat(filename) == statinfo
+    assert not changed
 
 
 def test_diet_keeps_smaller_file_by_default(config_copy):
@@ -391,8 +392,9 @@ def test_diet_keeps_smaller_file_by_default(config_copy):
 
     old_size = os.stat(filename).st_size
 
-    diet.diet(filename, config_copy)
+    changed = diet.diet(filename, config_copy)
     assert os.stat(filename).st_size == old_size
+    assert changed
 
     os.remove(filename)
 

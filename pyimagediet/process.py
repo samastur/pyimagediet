@@ -175,6 +175,8 @@ def diet(filename, configuration):
 
     Return new size of the file in bytes.
     '''
+    changed = False
+
     if not isfile(filename):
         raise NotFileDietException('Passed filename does not point to a file')
     # Wasteful to do parsing every time, but does not really matter as it takes
@@ -197,5 +199,6 @@ def diet(filename, configuration):
         # Delete backup, if it was internal
         if not conf.get('backup'):
             os.remove(backup)
+        changed = True
 
-    return os.stat(filename).st_size
+    return changed
