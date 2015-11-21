@@ -111,7 +111,42 @@ def test_parse_configuration_correctly_builds_pipelines(config_copy):
 
 
 #
-# Check configuration
+# update_configuration
+#
+def test_update_configuration_updates_sections(config_copy):
+    updates = {
+        'commands': {
+            'advpng': 'advpng',
+            'gifsicle': 'gifsicle'
+        }
+    }
+
+    assert config_copy['commands']['advpng'] == '/usr/local/bin/advpng'
+    assert config_copy['commands']['gifsicle'] == '/usr/local/bin/gifsicle'
+
+    diet.update_configuration(config_copy, updates)
+
+    assert config_copy['commands']['advpng'] == 'advpng'
+    assert config_copy['commands']['gifsicle'] == 'gifsicle'
+
+
+def test_update_configuration_copies_new_items(config_copy):
+    updates = {
+        'key1': 'value1',
+        'key2': 'value2'
+    }
+
+    assert not config_copy.get('key1', False)
+    assert not config_copy.get('key2', False)
+
+    diet.update_configuration(config_copy, updates)
+
+    assert config_copy['key1'] == 'value1'
+    assert config_copy['key2'] == 'value2'
+
+
+#
+# check_configuration
 #
 def test_check_configuration_passes_on_test_config(config_copy):
     diet.check_configuration(config_copy)

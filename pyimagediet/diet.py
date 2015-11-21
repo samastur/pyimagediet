@@ -63,6 +63,25 @@ def parse_configuration(config):
     return new_config
 
 
+def update_configuration(orig, new):
+    '''Update existing configuration with new values. Needed because
+    dict.update is shallow and would overwrite nested dicts.
+
+    Function updates sections commands, parameters and pipelines and adds any
+    new items listed in updates.
+    '''
+    dicts = ('commands', 'parameters', 'pipelines')
+    for key in dicts:
+        if key in new:
+            orig[key].update(new[key])
+
+    for key in new:
+        if key not in dicts:
+            orig[key] = new[key]
+
+
+
+
 def check_configuration(config):
     sections = ('commands', 'parameters', 'pipelines')
     # Check all sections are there and contain dicts
