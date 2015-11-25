@@ -110,6 +110,18 @@ def test_parse_configuration_correctly_builds_pipelines(config_copy):
 		assert pipeline == pipelines[img_type]
 
 
+def test_parse_configuration_marks_configuration_as_parsed(config_copy):
+    config = diet.parse_configuration(config_copy)
+    assert config['parsed']
+
+
+def test_parse_configuration_can_be_safely_run_multiple_times(config_copy):
+    config = diet.parse_configuration(config_copy)
+    config2 = diet.parse_configuration(config)
+
+    assert config == config2
+
+
 #
 # update_configuration
 #
@@ -415,5 +427,24 @@ def test_diet_keeps_processed_file_if_keep_processed_is_enabled(config_copy):
 
     diet.diet(filename, config_copy)
     assert os.stat(filename).st_size > old_size
+
+    os.remove(filename)
+
+
+def test_diet_works_with_already_parsed_configuration(config_copy):
+    add_fake_pipeline_to_config(BALLOON_CMD, config_copy)
+    config = diet.parse_configuration(config_copy)
+
+    assert config['parsed']
+
+    orig_filename = join(TEST_FILES_DIR, 'config.yaml')
+    diet.backup_file(orig_filename, 'test')
+    filename = ".".join([orig_filename, "test"])
+
+    old_size = os.stat(filename).st_size
+
+    changed = diet.diet(filename, config)
+    assert os.stat(filename).st_size == old_size
+    assert changed
 
     os.remove(filename)

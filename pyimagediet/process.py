@@ -45,20 +45,25 @@ def parse_configuration(config):
     '''
     new_config = copy.deepcopy(config)
 
-    # Always end up with input file. If app outputs to a different one,
-    # then replace old one with it
-    for prog in new_config['parameters']:
-        if '{output_file}' in new_config['parameters'][prog]:
-            new_config['parameters'][prog] = new_config['parameters'][prog] + " && mv '{output_file}' '{file}'"
+    # Parse only if it hasn't been parsed yet so it is safe to run it more than
+    # once.
+    if not new_config.get('parsed'):
+        # Always end up with input file. If app outputs to a different one,
+        # then replace old one with it
+        for prog in new_config['parameters']:
+            if '{output_file}' in new_config['parameters'][prog]:
+                new_config['parameters'][prog] = new_config['parameters'][prog] + " && mv '{output_file}' '{file}'"
 
-    # Build pipelines
-    for label, raw_pipeline in new_config['pipelines'].items():
-        commands = []
-        for app in raw_pipeline:
-            full_command = " ".join([new_config['commands'][app],
-                                     new_config['parameters'][app]])
-            commands.append(full_command)
-        new_config['pipelines'][label] = " && ".join(commands)
+        # Build pipelines
+        for label, raw_pipeline in new_config['pipelines'].items():
+            commands = []
+            for app in raw_pipeline:
+                full_command = " ".join([new_config['commands'][app],
+                                         new_config['parameters'][app]])
+                commands.append(full_command)
+            new_config['pipelines'][label] = " && ".join(commands)
+
+        new_config['parsed'] = True
 
     return new_config
 
@@ -175,9 +180,11 @@ def diet(filename, configuration):
 
     if not isfile(filename):
         raise NotFileDietException('Passed filename does not point to a file')
-    # Wasteful to do parsing every time, but does not really matter as it takes
-    # practically nothing in comparison with compression
-    conf = parse_configuration(configuration)
+
+    if not configuration.get('parsed'):
+        conf = parse_configuration(configuration)
+    else:
+        conf = configuration
 
     filetype = determine_type(filename)
     squeeze_cmd = conf['pipelines'].get(filetype)
