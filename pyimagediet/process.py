@@ -148,8 +148,8 @@ def backup_file(filename, backup_ext):
 
 
 def copy_if_different(src, dst):
-	if not filecmp.cmp(src, dst):
-		shutil.copyfile(src, dst)
+    if not filecmp.cmp(src, dst):
+        shutil.copyfile(src, dst)
 
 
 def squeeze(cmd, filename, backup_filename):
