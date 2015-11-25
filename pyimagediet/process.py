@@ -152,17 +152,13 @@ def squeeze(cmd, filename, backup_filename):
     # intermediate result.
     tmpfile = ".".join([filename, "diet_tmp"])
 
-    try:
-        retcode = call(cmd.format(file=filename, output_file=tmpfile),
-                       shell=True, stdout=PIPE)
-        if retcode != 0:
-            # Failed; Likely missing some utilities
-            raise CompressFileDietException(
-                ("Squeezing failed. Likely because "
-                 "of missing required utilities."))
-    except (CompressFileDietException,) as e:
+    retcode = call(cmd.format(file=filename, output_file=tmpfile),
+                   shell=True, stdout=PIPE)
+    if retcode != 0:
+        # Failed; Likely missing some utilities
         copy_if_different(backup_filename, filename)
-
+        raise CompressFileDietException(
+            "Squeezing failed. Likely because of missing required utilities.")
     return os.stat(filename).st_size
 
 

@@ -302,9 +302,12 @@ def test_squeeze_restores_file_if_it_fails():
     assert not filecmp.cmp(filename, backup)
 
     # This will fail because of missing command AND broken image
-    size = diet.squeeze('no_command', filename, backup)
+    try:
+        diet.squeeze('no_command', filename, backup)
+    except diet.CompressFileDietException as e:
+        assert e.msg == ("Squeezing failed. Likely because "
+                         "of missing required utilities.")
 
-    assert size == stat.st_size
     assert filecmp.cmp(filename, backup)
 
     os.remove(backup)
