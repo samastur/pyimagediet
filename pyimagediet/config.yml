@@ -1,11 +1,12 @@
 # Commands to be executed (label: path)
+# Specify path to executable for any that isn't be found on PATH.
 commands:
-  optipng: /usr/local/bin/optipng
-  advpng: /usr/local/bin/advpng
-  pngcrush: /usr/local/bin/pngcrush
-  jpegoptim: /usr/local/bin/jpegoptim
-  jpegtran: /usr/local/bin/jpegtran
-  gifsicle: /usr/local/bin/gifsicle
+  optipng: optipng
+  advpng: advpng
+  pngcrush: pngcrush
+  jpegoptim: jpegoptim
+  jpegtran: jpegtran
+  gifsicle: gifsicle
 
 
 # Parameters for commands (label: parameters)
@@ -34,7 +35,7 @@ pipelines:
   jpeg:
     - jpegtran
 
-# Uncomment and set if you want to backup original image
+# Uncomment and set if you want to create backup of original image
 # backup: orig
 
 # By default pyimagediet returns smallest file it can make even if that is
