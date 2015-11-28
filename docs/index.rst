@@ -6,10 +6,20 @@
 Welcome to pyimagediet's documentation!
 =======================================
 
+pyimagediet is a Python wrapper around image optimisations tools used to
+reduce images size without loss of visual quality. It provides a uniform
+interface to tools, easy configuration and integration.
+
+It works on images in JPEG, GIF, PNG or really any format for which you
+have optimisations tools.
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   install
+   configure
 
 
 
