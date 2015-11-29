@@ -5,7 +5,6 @@ Installation
 
 This part of the documentation covers the installation of pyimagediet.
 The first step to using any software package is getting it properly installed.
-The second step is to configure it which will be covered in next section.
 
 
 Distribute & Pip
@@ -26,7 +25,7 @@ But, you really `shouldn't do that <https://stackoverflow.com/questions/3220404/
 Get the Code
 ------------
 
-pyimagediet is actively developed on GitHub, where the code is
+pyimagediet is developed on GitHub, where the code is
 `always available <https://github.com/samastur/pyimagediet>`_.
 
 You can either clone the public repository::
@@ -48,9 +47,12 @@ or install it into your site-packages easily::
     $ python setup.py install
 
 
-Installing dependencies
------------------------
+Installing "dependencies"
+-------------------------
 
-pyimagediet does not have a hard dependency on any optimisation tool, but it
-also does not do anything useful without any.
+pyimagediet does not have a hard dependency on any external optimisation tool,
+but it also does not do anything useful without any. You do need to install at
+least one for each image format you want to handle.
+
+You can find a list of some in :ref:`exttools`
 

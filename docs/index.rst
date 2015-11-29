@@ -3,12 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pyimagediet's documentation!
-=======================================
+Welcome to pyimagediet documentation!
+=====================================
 
-pyimagediet is a Python wrapper around image optimisations tools used to
-reduce images size without loss of visual quality. It provides a uniform
-interface to tools, easy configuration and integration.
+pyimagediet is a MIT licensed Python wrapper around image optimisations tools
+used to reduce images size without loss of visual quality. It provides
+a uniform interface to tools, easy configuration and integration.
 
 It works on images in JPEG, GIF, PNG or really any format for which you
 have optimisations tools.
@@ -19,14 +19,6 @@ Contents:
    :maxdepth: 2
 
    install
+   external_tools
    configure
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   license
