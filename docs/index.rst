@@ -20,5 +20,6 @@ Contents:
 
    install
    external_tools
+   api
    configure
    license
