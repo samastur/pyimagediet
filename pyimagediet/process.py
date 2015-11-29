@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+
+"""
+pyimagediet
+~~~~~~~~~~~~
+:copyright: (c) 2015 by Marko Samastur
+:license: MIT, see LICENSE for more details.
+"""
 import copy
 import filecmp
 import magic
@@ -19,7 +27,12 @@ class ConfigurationErrorDietException(DietException): pass
 
 
 def read_yaml_configuration(filename):
-    '''Parse configuration in YAML format into a Python dict'''
+    '''Parse configuration in YAML format into a Python dict
+
+    :param filename: filename of a file with configuration in YAML format
+    :return: unprocessed configuration object
+    :rtype: dict
+    '''
     with open(filename, 'r') as f:
         config = yaml.load(f.read())
     return config
@@ -42,6 +55,11 @@ def parse_configuration(config):
     Parse and fix configuration:
         - processed file should end up being same as input
         - pipelines should contain CLI commands to run
+
+    :param config: raw configuration object
+    :type config: dict
+    :return: configuration ready for `diet()`
+    :rtype: dict
     '''
     new_config = copy.deepcopy(config)
 
@@ -74,6 +92,11 @@ def update_configuration(orig, new):
 
     Function updates sections commands, parameters and pipelines and adds any
     new items listed in updates.
+
+    :param orig: configuration to update
+    :type orig: dict
+    :param new: new updated values
+    :type orig: dict
     '''
     dicts = ('commands', 'parameters', 'pipelines')
     for key in dicts:
@@ -88,6 +111,13 @@ def update_configuration(orig, new):
 
 
 def check_configuration(config):
+    '''Check if configuration object is not malformed.
+
+    :param config: configuration
+    :type config: dict
+    :return: is configuration correct?
+    :rtype: bool
+    '''
     sections = ('commands', 'parameters', 'pipelines')
     # Check all sections are there and contain dicts
     for section in sections:
@@ -172,9 +202,11 @@ def diet(filename, configuration):
     Squeeze files if there is a pipeline defined for them or leave them be
     otherwise.
 
-    Makes a backup of a file, but only if file will be processed.
-
-    Return new size of the file in bytes.
+    :param filename: filename of the file to process
+    :param configuration: configuration dict describing commands and pipelines
+    :type configuration: dict
+    :return: has file changed
+    :rtype: bool
     '''
     changed = False
 
