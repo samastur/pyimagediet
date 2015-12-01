@@ -10,18 +10,23 @@ optimisations tools.
 
 
 **Documentation:**
+
 .. image:: https://readthedocs.org/projects/pyimagediet/badge/?version=latest
-:target: http://pyimagediet.readthedocs.org/en/latest/?badge=latest
-         :alt: Documentation Status
+  :target: http://pyimagediet.readthedocs.org/en/latest/?badge=latest
+  :alt: Documentation Status
 
 **Tests:**
-.. image:: https://coveralls.io/repos/samastur/pyimagediet/badge.svg?branch=master&service=github :target: https://coveralls.io/github/samastur/pyimagediet?branch=master 
+
+.. image:: https://coveralls.io/repos/samastur/pyimagediet/badge.svg?branch=master&service=github
+  :target: https://coveralls.io/github/samastur/pyimagediet?branch=master 
+
 .. image:: https://travis-ci.org/samastur/pyimagediet.svg?branch=master
-    :target: https://travis-ci.org/samastur/pyimagediet
+  :target: https://travis-ci.org/samastur/pyimagediet
 
 **Build:**
-.. image:: https://requires.io/github/samastur/pyimagediet/requirements.svg?branch=master
-     :target: https://requires.io/github/samastur/pyimagediet/requirements/?branch=master
-          :alt: Requirements Status
 
-`Documentation <http://pyimagediet.readthedocs.org/en/latest/>`
+.. image:: https://requires.io/github/samastur/pyimagediet/requirements.svg?branch=master
+  :target: https://requires.io/github/samastur/pyimagediet/requirements/?branch=master
+  :alt: Requirements Status
+
+`Documentation <http://pyimagediet.readthedocs.org/en/latest/>`_
