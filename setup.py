@@ -44,13 +44,12 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find version string.")
 
 
-long_description = '''\
-pyimagediet is a Python wrapper around image optimisations tools used to
-reduce images size without loss of visual quality. It provides a uniform
-interface to tools, easy configuration and integration.
+def read_long_description():
+    long_description = ""
+    with open('README.rst', 'r') as f:
+        long_description = f.read()
+    return long_description
 
-It works on images in JPEG, GIF and PNG formats and will leave others
-unchanged.'''
 
 setup(
     author="Marko Samastur",
@@ -58,12 +57,12 @@ setup(
     name='pyimagediet',
     version=find_version('pyimagediet', '__init__.py'),
     description='Python wrapper around image optimisations tools',
-    long_description=long_description,
+    long_description=read_long_description(),
     url='https://github.com/samastur/pyimagediet/',
     platforms=['OS Independent'],
     license='MIT License',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',

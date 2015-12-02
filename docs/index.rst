@@ -22,6 +22,7 @@ Contents:
 
    install
    external_tools
-   api
+   quickstart
    configure
+   api
    license
