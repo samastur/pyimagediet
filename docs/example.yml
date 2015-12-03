@@ -41,4 +41,4 @@ pipelines:
 # By default pyimagediet returns smallest file it can make even if that is
 # the original. If you don't want that (for example to reliably measure 
 # effectivness of tools and their parameters) then uncomment next line.
-keep_processed: true
+# keep_processed: true

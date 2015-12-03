@@ -4,15 +4,15 @@ Configuration
 =============
 
 As pyimagediet cannot guess which tools you want to use or how, you need to
-provide that information to `diet` function. This configuration object has to
+provide that information to ``diet`` function. This configuration object has to
 be a dict, but since dicts can be tedious to write, I prefer to start with
 YAML representation and produce configuration dict with any of Python YAML
 libraries.
 
-Example configuration file that comes with pyimagediet:
+Example configuration file:
 
 
-.. literalinclude:: ../pyimagediet/config.yml
+.. literalinclude:: example.yml
     :language: yaml
 
 
@@ -31,8 +31,8 @@ command from *commands* section has to have an entry here and they are matched
 by their label which is also used in *pipelines* section.
 
 pyimagediet is built on an assumption that each tool works on a file which is
-passed to it using `'{file}'` variable. If the output is stored in a different
-file, then that one should be marked with `'{output_file}'`.
+passed to it using ``'{file}'`` variable. If the output is stored in a different
+file, then that one should be marked with ``'{output_file}'``.
 
 *pipelines* section describes which programs are executed and in what order for
 matching file type. Its values are mime_type: list_of_apps. To match correctly

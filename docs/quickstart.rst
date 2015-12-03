@@ -4,8 +4,8 @@ Quick start
 ===========
 
 To use pyimagediet it is enough to know just one function and how to construct
-configuration object. To compress an image `/tmp/big_picture.png` with
-configuration dict stored in `config` you would call:
+configuration object. To compress an image ``/tmp/big_picture.png`` with
+configuration dict stored in ``config`` you would call:
 
 ::
 
