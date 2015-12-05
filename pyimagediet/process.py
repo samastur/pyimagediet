@@ -11,9 +11,14 @@ import filecmp
 import magic
 import os
 from os.path import exists, isfile
+from os.path import abspath, dirname, join, exists, isfile
 import shutil
 from subprocess import call, PIPE
 import yaml
+
+
+THIS_DIR = abspath(dirname(__file__))
+DEFAULT_CONFIG_FILE = join(THIS_DIR, 'default.yml')
 
 
 class DietException(Exception):
@@ -55,6 +60,7 @@ def parse_configuration(config):
     Parse and fix configuration:
         - processed file should end up being same as input
         - pipelines should contain CLI commands to run
+        - add missing sections
 
     :param config: raw configuration object
     :type config: dict
@@ -62,6 +68,10 @@ def parse_configuration(config):
     :rtype: dict
     '''
     new_config = copy.deepcopy(config)
+
+    required_parts = ('commands', 'parameters', 'pipelines')
+    for part in required_parts:
+        new_config.setdefault(part, {})
 
     # Parse only if it hasn't been parsed yet so it is safe to run it more than
     # once.
@@ -197,6 +207,11 @@ def squeeze(cmd, filename, backup_filename):
     return os.stat(filename).st_size
 
 
+DEFAULT_CONFIG = parse_configuration(
+    read_yaml_configuration(DEFAULT_CONFIG_FILE)
+)
+
+
 def diet(filename, configuration):
     '''
     Squeeze files if there is a pipeline defined for them or leave them be
@@ -213,10 +228,13 @@ def diet(filename, configuration):
     if not isfile(filename):
         raise NotFileDietException('Passed filename does not point to a file')
 
+
+    conf = copy.deepcopy(DEFAULT_CONFIG)
     if not configuration.get('parsed'):
-        conf = parse_configuration(configuration)
+        new_config = parse_configuration(configuration)
     else:
-        conf = configuration
+        new_config = configuration
+    update_configuration(conf, new_config)
 
     filetype = determine_type(filename)
     squeeze_cmd = conf['pipelines'].get(filetype)

@@ -25,4 +25,5 @@ Contents:
    quickstart
    configure
    api
+   defaults
    license

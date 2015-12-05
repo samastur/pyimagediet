@@ -53,6 +53,10 @@ It does not matter if you specify non-existing program in *commands* and
 *parameters* section, but if you do it in pipeline then execution will fail
 when that pipeline is invoked.
 
+pyimagediet also comes with few default settings described in section
+:ref:`defaults`. You only need to provide those values that are different which
+will take precedence over defaults.
+
 
 Optional parameters
 ~~~~~~~~~~~~~~~~~~~

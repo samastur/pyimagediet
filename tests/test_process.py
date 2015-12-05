@@ -110,6 +110,13 @@ def test_parse_configuration_correctly_builds_pipelines(config_copy):
 		assert pipeline == pipelines[img_type]
 
 
+def test_parse_configuration_adds_missing_required_sections():
+    config = diet.parse_configuration({})
+
+    for section in ('commands', 'parameters', 'pipelines'):
+        assert section in config
+
+
 def test_parse_configuration_marks_configuration_as_parsed(config_copy):
     config = diet.parse_configuration(config_copy)
     assert config['parsed']
@@ -305,7 +312,6 @@ def test_squeeze_restores_file_if_it_fails():
     backup = diet.backup_file(orig_filename, 'test')
     filename = ".".join([orig_filename, "test"])
     backup = diet.backup_file(filename, 'back')
-    stat = os.stat(filename)
 
     # Screw up file
     with open(filename, 'w') as f:
@@ -329,7 +335,6 @@ def test_squeeze_restores_file_if_it_fails():
 def test_squeeze_shrinks_an_image():
     filename = join(TEST_FILES_DIR, 'nature.png')
     backup = diet.backup_file(filename, 'back')
-    stat = os.stat(filename)
     cmd = "optipng -force -o7 '{file}' "
 
     assert filecmp.cmp(filename, backup)
@@ -354,7 +359,7 @@ def test_diet_complains_if_passed_filename_is_not_file():
     filename = TEST_FILES_DIR
 
     try:
-        diet.diet(filename, {})
+        diet.diet(filename, {'parsed':True})
     except (diet.NotFileDietException,) as e:
         pass
 
@@ -448,3 +453,25 @@ def test_diet_works_with_already_parsed_configuration(config_copy):
     assert changed
 
     os.remove(filename)
+
+
+def test_diet_reads_default_configuration():
+    filename = join(TEST_FILES_DIR, 'config.yaml')
+    diet.diet(filename, {'parsed':True})
+
+
+def test_diet_uses_default_configuration_values():
+    filename = join(TEST_FILES_DIR, 'nature.png')
+    backup = diet.backup_file(filename, 'back')
+
+    pipeline_config = {
+        'pipelines': {
+            'png': 'optipng'
+        },
+        'parsed': True
+    }
+
+    changed = diet.diet(backup, pipeline_config)
+    assert changed
+
+    os.remove(backup)
