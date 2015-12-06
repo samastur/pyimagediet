@@ -13,6 +13,7 @@ JPEG:
 * `zcjpeg-dssim <https://github.com/technopagan/cjpeg-dssim>`_ finds best quality setting for images using jpegoptim
 * `imgmin <https://github.com/rflynn/imgmin>`_ is another optimizer of jpeg quality setting
 * `mozjpeg <https://github.com/mozilla/mozjpeg>`_
+* `JPEGmini <http://www.jpegmini.com>`_, an expensive commercial compressor
 
 
 GIF:
