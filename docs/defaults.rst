@@ -1,8 +1,8 @@
 .. _defaults:
 
 
-Defaults values
-===============
+Default values
+==============
 
 pyimagediet already comes with some default values so you do not have to know
 or type everything. It is enough to provide only changes you want to make and
