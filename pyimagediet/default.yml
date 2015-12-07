@@ -17,7 +17,7 @@ parameters:
   pngcrush: -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB 
             -rem time '{file}' '{output_file}'
 
-  jpegoptim: -f --strip-all '{file}s'
+  jpegoptim: -f --strip-all '{file}'
   jpegtran: -copy none -progressive -optimize -outfile '{output_file}' '{file}'
 
   gifsicle: -O2 '{file}' > '{output_file}'
