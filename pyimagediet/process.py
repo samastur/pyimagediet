@@ -76,20 +76,25 @@ def parse_configuration(config):
     # Parse only if it hasn't been parsed yet so it is safe to run it more than
     # once.
     if not new_config.get('parsed'):
-        # Always end up with input file. If app outputs to a different one,
-        # then replace old one with it
-        for prog in new_config['parameters']:
-            if '{output_file}' in new_config['parameters'][prog]:
-                new_config['parameters'][prog] = new_config['parameters'][prog] + " && mv '{output_file}' '{file}'"
+        try:
+            # Always end up with input file. If app outputs to a different one,
+            # then replace old one with it
+            for prog in new_config['parameters']:
+                if '{output_file}' in new_config['parameters'][prog]:
+                    new_config['parameters'][prog] += " && mv '{output_file}' '{file}'"
 
-        # Build pipelines
-        for label, raw_pipeline in new_config['pipelines'].items():
-            commands = []
-            for app in raw_pipeline:
-                full_command = " ".join([new_config['commands'][app],
-                                         new_config['parameters'][app]])
-                commands.append(full_command)
-            new_config['pipelines'][label] = " && ".join(commands)
+            # Build pipelines
+            for label, raw_pipeline in new_config['pipelines'].items():
+                commands = []
+                for app in raw_pipeline:
+                    full_command = " ".join([new_config['commands'][app],
+                                             new_config['parameters'][app]])
+                    commands.append(full_command)
+                new_config['pipelines'][label] = " && ".join(commands)
+        except KeyError as e:
+            error_msg = "Missing key(s) in configuration: {0}.".format(
+                ",".join(e.args))
+            raise ConfigurationErrorDietException(error_msg)
 
         new_config['parsed'] = True
 

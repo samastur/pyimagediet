@@ -1,5 +1,5 @@
-from  .process import (
-    NotFileDietException, ConfigurationErrorDietException,
+from .process import (
+    DietException, NotFileDietException, ConfigurationErrorDietException,
     CompressFileDietException,
     read_yaml_configuration, parse_configuration, update_configuration,
     check_configuration, diet
@@ -8,10 +8,10 @@ from  .process import (
 
 __author__ = ("Marko Samastur <markos@gaivo.net>")
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 __all__ = [
-    NotFileDietException, ConfigurationErrorDietException,
+    DietException, NotFileDietException, ConfigurationErrorDietException,
     CompressFileDietException,
     read_yaml_configuration, parse_configuration, update_configuration,
     check_configuration, diet
