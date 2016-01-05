@@ -2,17 +2,17 @@ language: python
 matrix:
   include:
     - python: "2.6"
-      env: TOXENV=py26
+      env: TOXENV=py26 DIET_TOOLS_DIR=/usr/bin
     - python: "2.7"
-      env: TOXENV=py27
+      env: TOXENV=py27 DIET_TOOLS_DIR=/usr/bin
     - python: "3.3"
-      env: TOXENV=py33
+      env: TOXENV=py33 DIET_TOOLS_DIR=/usr/bin
     - python: "3.4"
-      env: TOXENV=py34
+      env: TOXENV=py34 DIET_TOOLS_DIR=/usr/bin
     - python: "3.5"
-      env: TOXENV=py35
+      env: TOXENV=py35 DIET_TOOLS_DIR=/usr/bin
     - python: "pypy"
-      env: TOXENV=pypy
+      env: TOXENV=pypy DIET_TOOLS_DIR=/usr/bin
 
 sudo: false # Use container-based infrastructure
 addons:
