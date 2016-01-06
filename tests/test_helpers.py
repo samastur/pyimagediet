@@ -54,18 +54,15 @@ commands:
     assert output == expected
 
 
-def test_get_config_output(capsys):
+def test_get_config_output():
     expected = """\
 commands:
   optipng: {0}/optipng
 pipelines:
   png:
   - optipng
-
 """.format(TOOLS_DIR)
 
     helpers.TOOLS = ('optipng',)
-
-    helpers.get_config()
-    output, err = capsys.readouterr()
+    output = helpers.get_config()
     assert output == expected

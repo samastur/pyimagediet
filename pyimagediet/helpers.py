@@ -53,4 +53,4 @@ def get_config():
     pipelines = cmds_to_pipelines(commands)
     output = section_to_yaml('commands', commands)
     output += section_to_yaml('pipelines', pipelines)
-    print(output)
+    return output
