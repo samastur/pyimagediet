@@ -22,7 +22,7 @@ TEST_CONFIG = {
         'gifsicle': "-O2 '{file}' > '{output_file}'",
         'jpegoptim': "-f --strip-all '{file}s'",
         'jpegtran': "-copy none -progressive -optimize -outfile '{output_file}' '{file}'",
-        'optipng': "-force -o7 '{file}'",
+        'optipng': "-force -o5 '{file}'",
         'pngcrush': "-rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '{file}' '{output_file}'"},
     'pipelines': {
         'gif': ['gifsicle'],
@@ -100,7 +100,7 @@ def test_parse_configuration_correctly_builds_pipelines(config_copy):
             "/usr/local/bin/jpegtran -copy none -progressive -optimize -outfile "
             "'{output_file}' '{file}' && mv '{output_file}' '{file}'"),
         'png': (
-            "/usr/local/bin/optipng -force -o7 '{file}' "
+            "/usr/local/bin/optipng -force -o5 '{file}' "
             "&& /usr/local/bin/advpng -z4 '{file}s' "
             "&& /usr/local/bin/pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP "
             "-rem sRGB -rem time '{file}' '{output_file}' && mv '{output_file}' "
@@ -206,6 +206,7 @@ def test_check_configuration_fails_if_sections_are_malformed():
             error_msg = 'Error: Section {0} is malformed.'.format(section)
             assert e.msg == error_msg
 
+
 def test_check_configuration_fails_if_tools_in_commands_and_parameters_differ():
     sections = ('commands', 'parameters')
     for section in sections:
@@ -281,8 +282,8 @@ def test_backup_file_raises_exception_if_different_backup_exists():
     shutil.copy(join(TEST_FILES_DIR,  'nature.gif'), backup_filename)
 
     try:
-        result = diet.backup_file(filename, 'back')
-    except (diet.DietException,) as e:
+        diet.backup_file(filename, 'back')
+    except diet.DietException:
         pass
 
     os.remove(backup_filename)
@@ -347,11 +348,11 @@ def test_squeeze_restores_file_if_it_fails():
 def test_squeeze_shrinks_an_image():
     filename = join(TEST_FILES_DIR, 'nature.png')
     backup = diet.backup_file(filename, 'back')
-    cmd = "optipng -force -o7 '{file}' "
+    cmd = "optipng -force -o5 '{file}' "
 
     assert filecmp.cmp(filename, backup)
 
-    size = diet.squeeze(cmd, filename, "")
+    diet.squeeze(cmd, filename, "")
     assert not filecmp.cmp(filename, backup)
 
     shutil.copyfile(backup, filename)
@@ -371,8 +372,8 @@ def test_diet_complains_if_passed_filename_is_not_file():
     filename = TEST_FILES_DIR
 
     try:
-        diet.diet(filename, {'parsed':True})
-    except (diet.NotFileDietException,) as e:
+        diet.diet(filename, {'parsed': True})
+    except diet.NotFileDietException:
         pass
 
 
@@ -469,7 +470,8 @@ def test_diet_works_with_already_parsed_configuration(config_copy):
 
 def test_diet_reads_default_configuration():
     filename = join(TEST_FILES_DIR, 'config.yaml')
-    diet.diet(filename, {'parsed':True})
+    diet.diet(filename, {'parsed': True})
+    # If it didn't, it would raise an exception
 
 
 def test_diet_uses_default_configuration_values():
