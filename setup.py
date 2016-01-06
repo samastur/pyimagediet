@@ -1,7 +1,7 @@
 import codecs
 import os
 import re
-from setuptools import setup, find_packages
+from setuptools import setup
 from setuptools.command.test import test as TestCommand
 import sys
 
@@ -10,15 +10,18 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 class Tox(TestCommand):
     user_options = [('tox-args=', 'a', "Arguments to pass to tox")]
+
     def initialize_options(self):
         TestCommand.initialize_options(self)
         self.tox_args = None
+
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = []
         self.test_suite = True
+
     def run_tests(self):
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import tox
         import shlex
         args = self.tox_args
@@ -28,12 +31,11 @@ class Tox(TestCommand):
         sys.exit(errno)
 
 
-
-'''Next two functions borrowed from pip's setup.py'''
 def read(*parts):
     # intentionally *not* adding an encoding option to open
-    # see here: https://github.com/pypa/virtualenv/issues/201#issuecomment-3145690
+    # see: https://github.com/pypa/virtualenv/issues/201#issuecomment-3145690
     return codecs.open(os.path.join(HERE, *parts), 'r').read()
+
 
 def find_version(*file_paths):
     version_file = read(*file_paths)
@@ -83,10 +85,15 @@ setup(
     install_requires=[
         'PyYAML>=3.11',
         'python-magic>=0.4.10',
+        'Click>=6.2',
     ],
     include_package_data=True,
     packages=['pyimagediet'],
+    entry_points='''
+        [console_scripts]
+        diet=pyimagediet.scripts.diet:diet
+    ''',
     tests_require=['tox'],
-    cmdclass = {'test': Tox},
+    cmdclass={'test': Tox},
     zip_safe=False
 )

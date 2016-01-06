@@ -1,0 +1,15 @@
+# Commands to be executed (label: path)
+commands:
+  optipng: optipng
+
+# Parameters for commands (label: parameters)
+# Use same labels as in command section.
+parameters:
+  optipng: -force -o7 '{file}'
+
+
+# Pipelines for each file type. Order of labels specifies order of execution
+# Use same labels as in command section.
+pipelines:
+  png:
+    - optipng
