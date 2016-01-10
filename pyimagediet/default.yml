@@ -24,6 +24,6 @@ parameters:
   jpegoptim: -f --strip-all '{file}'
   jpegtran: -copy none -progressive -optimize -outfile '{output_file}' '{file}'
   mozjpeg: -copy none -progressive -optimize -outfile '{output_file}' '{file}'
-  imgmin: '{file}' '{output_file}'
+  imgmin: "'{file}' '{output_file}'"
 
   gifsicle: -O2 '{file}' > '{output_file}'
