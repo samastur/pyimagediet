@@ -4,8 +4,11 @@ commands:
   optipng: optipng
   advpng: advpng
   pngcrush: pngcrush
+  pngquant: pngquant
   jpegoptim: jpegoptim
   jpegtran: jpegtran
+  mozjpeg: jpegtran
+  imgmin: imgmin
   gifsicle: gifsicle
 
 
@@ -16,8 +19,11 @@ parameters:
   advpng: -z4 '{file}s'
   pngcrush: -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB 
             -rem time '{file}' '{output_file}'
+  pngquant: --output '{output_file}' '{file}'
 
   jpegoptim: -f --strip-all '{file}'
   jpegtran: -copy none -progressive -optimize -outfile '{output_file}' '{file}'
+  mozjpeg: -copy none -progressive -optimize -outfile '{output_file}' '{file}'
+  imgmin: '{file}' '{output_file}'
 
   gifsicle: -O2 '{file}' > '{output_file}'
