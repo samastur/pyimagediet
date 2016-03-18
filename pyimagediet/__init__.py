@@ -8,7 +8,7 @@ from .process import (
 
 __author__ = ("Marko Samastur <markos@gaivo.net>")
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 __all__ = [
     DietException, NotFileDietException, ConfigurationErrorDietException,

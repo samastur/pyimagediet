@@ -89,10 +89,9 @@ setup(
     ],
     include_package_data=True,
     packages=['pyimagediet'],
-    entry_points='''
-        [console_scripts]
-        diet=pyimagediet.scripts.diet:diet
-    ''',
+    entry_points={
+        'console_scripts': ['diet=pyimagediet.cli:diet']
+    },
     tests_require=['tox'],
     cmdclass={'test': Tox},
     zip_safe=False

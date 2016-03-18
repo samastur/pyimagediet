@@ -4,7 +4,7 @@ import os
 from os.path import abspath, dirname, join
 import shutil
 
-import pyimagediet.scripts.diet as diet
+import pyimagediet.cli as diet
 import pyimagediet.process as process
 import pyimagediet.helpers as helpers
 
